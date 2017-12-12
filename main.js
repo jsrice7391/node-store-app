@@ -2,35 +2,50 @@ const express = require("express");
 const mysql = require("mysql");
 require("dotenv/config");
 require("./server/index.js");
+const database = require("./db_side");
+
+const inquirer = require("inquirer");
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: process.env.DB_ENTRY,
     database: 'bamazon_db'
 });
-
 db.connect((err) => {
     if (err) throw err;
-    console.log("MySQL connected");
 })
 
 
 
-function add_item(name, department_name, price, quantity) {
-    app.get("/addpost", (req, res) => {
-        let post = { product_name: name, department_name: department_name, price: price, stock_quantity: quantity };
-        let sql = "INSERT INTO products SET ?";
-        let query = db.query(sql, post, (err, result) => {
-            if (err) throw err;
-            console.log(result);
-            res.send(post);
-        });
+let start = () => {
+    inquirer.prompt([{
+        name: "user_command",
+        type: "list",
+        message: "How can we help you?",
+        choices: ["Buy", "Show All"],
+        filter: function(str) {
+            return str.split(" ").join("-").toLowerCase();
+        }
+    }]).then(function(response) {
+        let choice = response.user_command;
+        switch (choice) {
+            case "buy":
+                inquirer.prompt([{
+                    name: "item_id",
+                    message: "What is the id of the item you would like?",
+
+                }, {
+                    name: "item_count",
+                    message: "How many would you like?"
+                }]).then(function(response) {
+                    database.buy_item(response.item_id, response.item_count)
+                });
+
+
+        }
 
     })
+}
 
-};
 
-app.listen("3060", (err) => {
-    if (err) throw err;
-    console.log("Server listening on port 3060");
-});
+start();

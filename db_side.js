@@ -19,6 +19,31 @@ let add_item = (product_name, department_name, price, quant) => {
     });
 }
 
+
+
+let buy_item = (choice, how_many) => {
+    let post = choice;
+    let sql = "SELECT * FROM products WHERE id=" + choice + "";
+    let query = db.query(sql, post, (err, result) => {
+        if (err) throw err;
+        let current_inv = result[0].stock_quantity;
+        if (current_inv > how_many) {
+            let update_it = "UPDATE products SET stock_quantity=" + (current_inv - how_many) + " WHERE id=" + choice + "";
+            let update_query = db.query(update_it, (err, result) => {
+                if (err) throw err;
+                console.log("UPDATED")
+                showItem();
+
+            })
+
+        } else {
+            console.log("We do not have that many, please come back some other time");
+        }
+    })
+}
+
+
+
 let showItem = (limit = "") => {
     let sql = "SELECT * FROM products";
     let query = db.query(sql, (err, result) => {
@@ -35,4 +60,8 @@ let showItem = (limit = "") => {
     })
 }
 
-showItem();
+module.exports = {
+    add_item: add_item,
+    showItem: showItem,
+    buy_item: buy_item
+}
