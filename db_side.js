@@ -1,20 +1,14 @@
+require("dotenv/config");
+require("./server/index.js");
 const mysql = require("mysql");
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '@GoPats2017',
+    password: process.env.DB_ENTRY,
     database: 'bamazon_db'
 });
-const columnify = require('columnify')
-    // var columns = columnify(data, {
-    //     truncate: true,
-    //     config: {
-    //         description: {
-    //             maxWidth: 20
-    //         }
-    //     }
-    // })
 
+const columnify = require('columnify')
 
 let add_item = (product_name, department_name, price, quant) => {
     let post = { product_name: product_name, department_name: department_name, price: price, stock_quantity: quant };
@@ -25,7 +19,7 @@ let add_item = (product_name, department_name, price, quant) => {
     });
 }
 
-let showItem = () => {
+let showItem = (limit = "") => {
     let sql = "SELECT * FROM products";
     let query = db.query(sql, (err, result) => {
         if (err) throw err;
@@ -38,9 +32,7 @@ let showItem = () => {
             }
         })
         console.log(columns);
-
     })
 }
 
-
-showItem()
+showItem();
