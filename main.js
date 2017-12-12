@@ -1,12 +1,11 @@
 const express = require("express");
 const mysql = require("mysql");
-
-const app = express();
-
+require("dotenv/config");
+require("./server/index.js");
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '@GoPats2017',
+    password: process.env.DB_ENTRY,
     database: 'bamazon_db'
 });
 
