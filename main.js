@@ -38,7 +38,7 @@ let start = () => {
                     name: "item_count",
                     message: "How many would you like?"
                 }]).then(function(response) {
-                    database.buy_item(response.item_id, response.item_count)
+                    database.buy_item(response.item_id, response.item_count);
                 });
 
 

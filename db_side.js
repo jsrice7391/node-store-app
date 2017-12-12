@@ -26,13 +26,14 @@ let buy_item = (choice, how_many) => {
     let sql = "SELECT * FROM products WHERE id=" + choice + "";
     let query = db.query(sql, post, (err, result) => {
         if (err) throw err;
+        let user_choice_item = result[0].product_name;
+        let user_choice_price = result[0].price;
         let current_inv = result[0].stock_quantity;
         if (current_inv > how_many) {
             let update_it = "UPDATE products SET stock_quantity=" + (current_inv - how_many) + " WHERE id=" + choice + "";
-            let update_query = db.query(update_it, (err, result) => {
+            let update_query = db.query(update_it, (err, resultingQuant) => {
                 if (err) throw err;
-                console.log("UPDATED")
-                showItem();
+                console.log("Yor order of " + user_choice_item + " will cost $" + (how_many * user_choice_price) + "");
 
             })
 
@@ -41,7 +42,6 @@ let buy_item = (choice, how_many) => {
         }
     })
 }
-
 
 
 let showItem = (limit = "") => {
