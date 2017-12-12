@@ -45,7 +45,7 @@ let buy_item = (choice, how_many) => {
 
 
 let showItem = (limit = "") => {
-    let sql = "SELECT * FROM products";
+    let sql = "SELECT * FROM products " + limit;
     let query = db.query(sql, (err, result) => {
         if (err) throw err;
         var columns = columnify(result, {
@@ -58,7 +58,10 @@ let showItem = (limit = "") => {
         })
         console.log(columns);
     })
-}
+};
+
+
+
 
 module.exports = {
     add_item: add_item,
