@@ -11,10 +11,6 @@ const db = mysql.createConnection({
     password: process.env.DB_ENTRY,
     database: 'bamazon_db'
 });
-db.connect((err) => {
-    if (err) throw err;
-})
-
 
 
 let start = () => {
@@ -39,6 +35,7 @@ let start = () => {
                     message: "How many would you like?"
                 }]).then(function(response) {
                     database.buy_item(response.item_id, response.item_count);
+                    start();
                 });
                 break;
             case "show-all":
@@ -46,9 +43,10 @@ let start = () => {
                 break;
             case "view-low-inventory":
                 database.showItem("WHERE stock_quantity < 5");
+                start();
                 break;
 
-            case "add-to-inventory":
+            case "add-new-product":
                 inquirer.prompt([{
                     name: "product_name",
                     message: "What is the name of the product?"
@@ -63,6 +61,19 @@ let start = () => {
                     message: "How much of this item do you have?"
                 }]).then(function(response) {
                     database.add_item(response.product_name, response.product_department, response.product_price, response.product_quant);
+                    start();
+                });
+                break;
+            case "add-to-inventory":
+                inquirer.prompt([{
+                    name: "user_product",
+                    message: "What is the ID of the product you wish to add to?"
+
+                }, {
+                    name: "user_quant",
+                    message: "How many do you wish to add?"
+                }]).then(function(response) {
+                    database.update_quant(response.user_product, response.user_quant)
                 });
                 break;
             default:
@@ -70,8 +81,7 @@ let start = () => {
                 break;
         }
 
-    })
-}
-
+    });
+};
 
 start();
