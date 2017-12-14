@@ -20,6 +20,7 @@ let add_item = (product_name, department_name, price, quant) => {
     let query = db.query(sql, post, (err, result) => {
         if (err) throw err;
         console.log(result);
+        db.end();
     });
 }
 
@@ -37,6 +38,7 @@ let update_quant = (choice, quant) => {
             let query = db.query(sql, (err, result) => {
                 if (err) throw err;
                 console.log(user_choice.product_name + "'s quantity has been successfully updated.");
+                db.end();
             });
         } else {
             console.log("No responses found.");
@@ -53,17 +55,19 @@ let buy_item = (choice, how_many) => {
     let sql = "SELECT * FROM products WHERE id=" + choice + "";
     let query = db.query(sql, post, (err, result) => {
         if (err) throw err;
-        if (response.length < 0) {
+        if (result.length > 0) {
             let user_choice_item = result[0].product_name;
             let user_choice_price = result[0].price;
             let current_inv = result[0].stock_quantity;
             if (current_inv > how_many) {
-                let update_it = "UPDATE products SET stock_quantity=" + (current_inv - how_many) + ", product_sales=" + how_many + " WHERE id=" + choice + "";
+                let update_it = "UPDATE products SET stock_quantity=" + (current_inv - parseInt(how_many)) + ", product_sales=" + (how_many * user_choice_price) + " WHERE id=" + choice + "";
                 let update_query = db.query(update_it, (err, resultingQuant) => {
                     if (err) throw err;
                     console.log("Yor order of " + user_choice_item + " will cost $" + (how_many * user_choice_price) + "");
+                    db.end();
 
-                })
+
+                });
 
             } else {
                 console.log("We do not have that many, please come back some other time");
@@ -89,7 +93,8 @@ let showItem = (limit = "") => {
                 }
             }
         })
-        console.log(columns);
+        console.log("\n" + columns);
+        db.end();
     })
 };
 

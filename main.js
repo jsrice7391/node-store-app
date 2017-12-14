@@ -3,14 +3,38 @@ const mysql = require("mysql");
 require("dotenv/config");
 require("./server/index.js");
 const database = require("./db_side");
-
 const inquirer = require("inquirer");
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: process.env.DB_ENTRY,
-    database: 'bamazon_db'
-});
+const admin = require("./admin.js");
+
+
+
+function authenticate() {
+    inquirer.prompt([{
+        name: "user_name",
+        type: "input",
+        message: "Username? "
+    }, {
+        name: "role",
+        type: "list",
+        message: "What is your role?",
+        choices: ["user", "admin"]
+    }]).then(function(response) {
+        let user_name = response.user_name;
+        if (response.role == "admin") {
+            inquirer.prompt([{
+                name: "password",
+                message: "What is your admin password"
+            }]).then(function(response) {
+                admin.auth_user(user_name, response.password);
+            })
+        } else {
+            start();
+        }
+    });
+};
+
+authenticate();
+
 
 
 let start = () => {
@@ -35,7 +59,6 @@ let start = () => {
                     message: "How many would you like?"
                 }]).then(function(response) {
                     database.buy_item(response.item_id, response.item_count);
-                    start();
                 });
                 break;
             case "show-all":
@@ -43,7 +66,6 @@ let start = () => {
                 break;
             case "view-low-inventory":
                 database.showItem("WHERE stock_quantity < 5");
-                start();
                 break;
 
             case "add-new-product":
@@ -61,7 +83,6 @@ let start = () => {
                     message: "How much of this item do you have?"
                 }]).then(function(response) {
                     database.add_item(response.product_name, response.product_department, response.product_price, response.product_quant);
-                    start();
                 });
                 break;
             case "add-to-inventory":
@@ -82,6 +103,6 @@ let start = () => {
         }
 
     });
-};
+    start();
 
-start();
+};
