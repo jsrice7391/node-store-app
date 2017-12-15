@@ -79,10 +79,8 @@ let buy_item = (choice, how_many) => {
 }
 
 
-
-
 let showItem = (limit = "") => {
-    let sql = "SELECT * FROM products " + limit;
+    let sql = "SELECT product_name, department_name, price, stock_quantity FROM products " + limit;
     let query = db.query(sql, (err, result) => {
         if (err) throw err;
         var columns = columnify(result, {
@@ -97,6 +95,9 @@ let showItem = (limit = "") => {
         db.end();
     })
 };
+
+
+
 
 
 

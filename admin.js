@@ -9,6 +9,8 @@ const db = mysql.createConnection({
     database: 'bamazon_db'
 });
 const columnify = require('columnify');
+const inquirer = require("inquirer");
+
 
 let auth_user = (user, user_pass) => {
     let sql = 'SELECT * FROM users WHERE user_name="' + user + '" AND user_pass="' + user_pass + '";';
@@ -20,7 +22,6 @@ let auth_user = (user, user_pass) => {
         } else {
             console.log("Get out of here you swine!");
         }
-        db.end();
     })
 }
 
@@ -38,7 +39,7 @@ let admin_access = () => {
         switch (admin_choice) {
             case "view-product-sales-by-department":
                 console.log("Here are the sales by deapartment")
-                break;
+                department_show();
             case "create-new-department":
                 console.log("Let us create a new department");
                 break;
@@ -48,6 +49,25 @@ let admin_access = () => {
         }
     })
 }
+
+let department_show = () => {
+    let my_query = "SELECT departments.id, departments.department_name AS 'Department Name', departments.over_head_costs AS 'Over Head Costs', products.product_sales AS 'Product Sales', departments.over_head_costs - products.product_sales AS 'Total Profit' FROM departments LEFT JOIN products ON departments.id = products.id;";
+    let query = db.query(my_query, (err, res) => {
+        if (err) throw err;
+        var columns = columnify(res, {
+            truncate: true,
+            config: {
+                description: {
+                    maxWidth: 60
+                }
+            }
+        })
+        console.log("\n" + columns);
+
+
+    });
+}
+
 
 
 module.exports = {
