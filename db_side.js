@@ -12,15 +12,14 @@ const db = mysql.createConnection({
     database: 'bamazon_db'
 });
 
-const columnify = require('columnify')
+const columnify = require('columnify');
 
 let add_item = (product_name, department_name, price, quant) => {
     let post = { product_name: product_name, department_name: department_name, price: price, stock_quantity: quant };
     let sql = "INSERT INTO products SET ?";
     let query = db.query(sql, post, (err, result) => {
         if (err) throw err;
-        console.log(result);
-        db.end();
+        console.log(product_name + " has been added to the databse");
     });
 }
 
@@ -32,8 +31,6 @@ let update_quant = (choice, quant) => {
         if (response.length > 0) {
 
             let user_choice = response[0];
-
-            console.log(user_choice);
             let sql = "UPDATE products SET stock_quantity=" + (response[0].stock_quantity + parseInt(quant)) + " WHERE id=" + choice + "";
             let query = db.query(sql, (err, result) => {
                 if (err) throw err;
@@ -64,8 +61,6 @@ let buy_item = (choice, how_many) => {
                 let update_query = db.query(update_it, (err, resultingQuant) => {
                     if (err) throw err;
                     console.log("Yor order of " + user_choice_item + " will cost $" + (how_many * user_choice_price) + "");
-                    db.end();
-
 
                 });
 
@@ -80,7 +75,7 @@ let buy_item = (choice, how_many) => {
 
 
 let showItem = (limit = "") => {
-    let sql = "SELECT product_name, department_name, price, stock_quantity FROM products " + limit;
+    let sql = "SELECT id, product_name, department_name, price, stock_quantity FROM products " + limit;
     let query = db.query(sql, (err, result) => {
         if (err) throw err;
         var columns = columnify(result, {
@@ -92,7 +87,6 @@ let showItem = (limit = "") => {
             }
         })
         console.log("\n" + columns);
-        db.end();
     })
 };
 

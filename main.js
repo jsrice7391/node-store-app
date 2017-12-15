@@ -7,6 +7,7 @@ const inquirer = require("inquirer");
 const admin = require("./admin.js");
 
 
+database.showItem();
 
 function authenticate() {
     inquirer.prompt([{
@@ -23,6 +24,7 @@ function authenticate() {
         if (response.role == "admin") {
             inquirer.prompt([{
                 name: "password",
+                type: "password",
                 message: "What is your admin password"
             }]).then(function(response) {
                 admin.auth_user(user_name, response.password);
@@ -37,7 +39,7 @@ authenticate();
 
 
 
-let start = () => {
+function start() {
     inquirer.prompt([{
         name: "user_command",
         type: "list",
@@ -67,20 +69,32 @@ let start = () => {
             case "view-low-inventory":
                 database.showItem("WHERE stock_quantity < 5");
                 break;
-
             case "add-new-product":
                 inquirer.prompt([{
                     name: "product_name",
                     message: "What is the name of the product?"
                 }, {
                     name: "product_department",
-                    message: "What is the department of the product?"
+                    message: "What is the department of the product?",
+
                 }, {
                     name: "product_price",
-                    message: "How Much is the product?"
+                    message: "How Much is the product?",
+                    validate: function(value) {
+                        if (isNaN(value) === false) {
+                            return true;
+                        }
+                        return false;
+                    }
                 }, {
                     name: "product_quant",
-                    message: "How much of this item do you have?"
+                    message: "How much of this item do you have?",
+                    validate: function(value) {
+                        if (isNaN(value) === false) {
+                            return true;
+                        }
+                        return false;
+                    }
                 }]).then(function(response) {
                     database.add_item(response.product_name, response.product_department, response.product_price, response.product_quant);
                 });
@@ -105,3 +119,7 @@ let start = () => {
     });
 
 };
+
+module.exports = {
+    start: start
+}

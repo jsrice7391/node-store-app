@@ -12,6 +12,8 @@ const columnify = require('columnify');
 const inquirer = require("inquirer");
 
 
+
+
 let auth_user = (user, user_pass) => {
     let sql = 'SELECT * FROM users WHERE user_name="' + user + '" AND user_pass="' + user_pass + '";';
     let query = db.query(sql, (err, res) => {
@@ -21,6 +23,8 @@ let auth_user = (user, user_pass) => {
             admin_access();
         } else {
             console.log("Get out of here you swine!");
+
+
         }
     })
 }
@@ -38,7 +42,6 @@ let admin_access = () => {
         let admin_choice = response.user_command;
         switch (admin_choice) {
             case "view-product-sales-by-department":
-                console.log("Here are the sales by deapartment")
                 department_show();
             case "create-new-department":
                 console.log("Let us create a new department");
@@ -51,7 +54,7 @@ let admin_access = () => {
 }
 
 let department_show = () => {
-    let my_query = "SELECT departments.id, departments.department_name AS 'Department Name', departments.over_head_costs AS 'Over Head Costs', products.product_sales AS 'Product Sales', departments.over_head_costs - products.product_sales AS 'Total Profit' FROM departments LEFT JOIN products ON departments.id = products.id;";
+    let my_query = "SELECT departments.id, products.department_name AS 'Department Name', departments.over_head_costs AS 'Over Head Costs', products.product_sales AS 'Product Sales', departments.over_head_costs - products.product_sales AS 'Total Profit' FROM departments LEFT JOIN products ON departments.id = products.id;";
     let query = db.query(my_query, (err, res) => {
         if (err) throw err;
         var columns = columnify(res, {
@@ -63,9 +66,10 @@ let department_show = () => {
             }
         })
         console.log("\n" + columns);
-
-
+        db.end();
     });
+
+
 }
 
 
