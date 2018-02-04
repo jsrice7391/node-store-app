@@ -13,5 +13,6 @@ This is a NodeJS app that uses MySQL in a store like fashion.
 <li>Intall all of the packages by running 
 <code>npm install</code>
 </li>
+<li>Within the <em>admin.js</em> and <em>db_side.js</em> file, configure the db variable with your MySql connections</li>
 <li>Within the terminal run: 
 <code>node main.js</code></li>

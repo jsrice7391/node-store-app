@@ -2,6 +2,7 @@ require("dotenv/config");
 require("./server/index.js");
 const main = require("./main.js")
 const mysql = require("mysql");
+// The DB object needed to connect to a databse.
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
