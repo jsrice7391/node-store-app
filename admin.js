@@ -5,6 +5,7 @@ require("dotenv/config");
 require("./server/index.js");
 const main = require("./main.js")
 const mysql = require("mysql");
+
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
