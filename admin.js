@@ -1,3 +1,6 @@
+// This is a page specifically made for admin and administrative rights.
+// This is not accessed right off the start of the application. Only if the user is an admin can they access the features and queries on this page.
+
 require("dotenv/config");
 require("./server/index.js");
 const main = require("./main.js")

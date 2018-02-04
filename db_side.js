@@ -1,9 +1,6 @@
 require("dotenv/config");
 require("./server/index.js");
 const main = require("./main.js")
-
-
-
 const mysql = require("mysql");
 const db = mysql.createConnection({
     host: 'localhost',
@@ -12,9 +9,13 @@ const db = mysql.createConnection({
     database: 'bamazon_db'
 });
 
+// A plugin that allows theb output of the items in columns
 const columnify = require('columnify');
 
+
+// An insert function 
 let add_item = (product_name, department_name, price, quant) => {
+    // Take theb input from add item and make it an object 
     let post = { product_name: product_name, department_name: department_name, price: price, stock_quantity: quant };
     let sql = "INSERT INTO products SET ?";
     let query = db.query(sql, post, (err, result) => {
@@ -24,20 +25,26 @@ let add_item = (product_name, department_name, price, quant) => {
 }
 
 
+// The update function for the databse. Takes the choice of the item and the amount of the item that the customer wants. 
 let update_quant = (choice, quant) => {
     let sql = "SELECT * FROM products WHERE id=" + choice + "";
     let update = db.query(sql, (err, response) => {
         if (err) throw err;
-        if (response.length > 0) {
 
+        // If the query actually returns a result.
+        if (response.length > 0) {
             let user_choice = response[0];
+            // Set the string for the query
+
             let sql = "UPDATE products SET stock_quantity=" + (response[0].stock_quantity + parseInt(quant)) + " WHERE id=" + choice + "";
+            // Run the query with the string that is provided.
             let query = db.query(sql, (err, result) => {
                 if (err) throw err;
                 console.log(user_choice.product_name + "'s quantity has been successfully updated.");
                 db.end();
             });
         } else {
+            // If no responses are found
             console.log("No responses found.");
 
         }
