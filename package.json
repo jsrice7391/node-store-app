@@ -13,8 +13,8 @@
     "columnify": "^1.5.4",
     "dotenv": "^4.0.0",
     "express": "^4.19.2",
-    "inquirer": "^4.0.1",
+    "inquirer": "^9.0.0",
     "mysql": "^2.15.0",
-    "nodemon": "^2.0.0"
+    "nodemon": "^2.0.20"
   }
 }
